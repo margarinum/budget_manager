@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import time
+from sqlite3 import connect
 
 # Данная программа представляет из себя жалкие попытки вспомнить питон
 """
@@ -20,7 +21,14 @@ list_out = []
 g_sum_ent = 3
 g_operation = '+'
 g_comment = 'comment'
-g_category = 'somecategoryыщьу'
+g_category = 'somecategory'
+
+try:
+    conn = connect(r'C:\Users\Lenovo\PycharmProjects\budget_manager\DB\db.db')
+    curs = conn.cursor()
+except:
+    print("Ошибка подключения к БД!")
+
 
 #Тут должен начинаться класс работы с файлом
 
@@ -38,7 +46,16 @@ def inserting_into_file (p_sum_ent, p_operation, p_category, p_comment):
     string_to_file = str(list_func)
     file_open.write(string_to_file+'\n')
     file_open.close()
-    return 'Операция добавлена'
+    try:
+        sql_text = '''insert into bm_transaction(sum_tr, type_oper, date_oper, category, comment)
+                values (?, ?, ?, ?, ?)'''
+        #curs.execute(pref + "('3', '+', '18/02/2018 14:26:31', 'comment', 'category')")
+        curs.execute(sql_text, (p_sum_ent, p_operation, nowdate, p_category, p_comment))
+        return 'Операция добавлена'
+    except AssertionError:
+        print("Ошибка вставки в БД!")
+        conn.commit()
+
 
 #Вызов функции вставки в файл
 #inserting_into_file(g_sum_ent, g_operation, g_category, g_comment)
@@ -67,5 +84,10 @@ def create_category(p_category_name):
     finally:
         file.close()
 
-a = create_category(g_category)
-print(a)
+#a = create_category(g_category)
+#print(a)
+'''
+res_transaction = curs.execute("select * from bm_transaction")
+res = res_transaction.fetchall()
+print(res)
+'''
