@@ -21,7 +21,7 @@ list_out = []
 g_sum_ent = 3
 g_operation = '+'
 g_comment = 'comment'
-g_category = 'somecategory'
+g_category = 2
 
 try:
     conn = connect(r'C:\Users\Lenovo\PycharmProjects\budget_manager\DB\db.db')
@@ -47,18 +47,20 @@ def inserting_into_file (p_sum_ent, p_operation, p_category, p_comment):
     file_open.write(string_to_file+'\n')
     file_open.close()
     try:
-        sql_text = '''insert into bm_transaction(sum_tr, type_oper, date_oper, category, comment)
+        #Добавить нормальную вставку даты, даже лучше системную дату питона
+        sql_text = '''insert into bm_transaction(sum_tr, type_oper, date_oper, id_category, comment)
                 values (?, ?, ?, ?, ?)'''
         #curs.execute(pref + "('3', '+', '18/02/2018 14:26:31', 'comment', 'category')")
         curs.execute(sql_text, (p_sum_ent, p_operation, nowdate, p_category, p_comment))
+        conn.commit()
         return 'Операция добавлена'
+
     except AssertionError:
         print("Ошибка вставки в БД!")
-        conn.commit()
 
 
 #Вызов функции вставки в файл
-#inserting_into_file(g_sum_ent, g_operation, g_category, g_comment)
+inserting_into_file(g_sum_ent, g_operation, g_category, g_comment)
 
 #Функция чтения из файла
 def read_file ():
