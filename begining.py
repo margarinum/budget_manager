@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import time
-from sqlite3 import connect
+import sqlite3
 
 # Данная программа представляет из себя жалкие попытки вспомнить питон
 """
@@ -15,20 +15,31 @@ from sqlite3 import connect
 #Глобальные переменные
 list_func = []
 list_out = []
+dict_categories = {}
 
 #Объявим и присвоим тестовые значения
 #Тест
 g_sum_ent = 3
 g_operation = '+'
 g_comment = 'comment'
-g_category = 2
+g_category = 1
 
 try:
-    conn = connect(r'C:\Users\Lenovo\PycharmProjects\budget_manager\DB\db.db')
+    conn = sqlite3.connect(r'C:\Users\Lenovo\PycharmProjects\budget_manager\DB\db.db')
     curs = conn.cursor()
+    #В SQLite интересно реализованы ключи - если их не включишь вручную, в таблицу может полететь мусор, поэтому:
+    curs.execute("PRAGMA foreign_keys = 1")
 except:
     print("Ошибка подключения к БД!")
 
+#Достанем существующие категории
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
+
+#Продолжить функционал извлечения из БД
 
 #Тут должен начинаться класс работы с файлом
 
@@ -46,17 +57,24 @@ def inserting_into_file (p_sum_ent, p_operation, p_category, p_comment):
     string_to_file = str(list_func)
     file_open.write(string_to_file+'\n')
     file_open.close()
+
     try:
-        #Добавить нормальную вставку даты, даже лучше системную дату питона
         sql_text = '''insert into bm_transaction(sum_tr, type_oper, date_oper, id_category, comment)
                 values (?, ?, ?, ?, ?)'''
         #curs.execute(pref + "('3', '+', '18/02/2018 14:26:31', 'comment', 'category')")
         curs.execute(sql_text, (p_sum_ent, p_operation, nowdate, p_category, p_comment))
         conn.commit()
-        return 'Операция добавлена'
-
+    except sqlite3.IntegrityError:
+        res = 'Ошибка! Такой категории не сущствует!'
     except AssertionError:
-        print("Ошибка вставки в БД!")
+        res = 'Ошибка вставки в БД!'
+    else:
+        res = 'Транзакция добавлена!'
+    finally:
+        conn.rollback()
+        print(res)
+        return res
+
 
 
 #Вызов функции вставки в файл
