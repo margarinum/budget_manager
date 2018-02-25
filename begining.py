@@ -17,33 +17,48 @@ list_func = []
 list_out = []
 dict_categories = {}
 
+try:
+    conn = sqlite3.connect(r'C:\Users\Lenovo\PycharmProjects\budget_manager\DB\db.db')
+    curs = conn.cursor()
+    # В SQLite интересно реализованы ключи - если их не включишь вручную, в таблицу может полететь мусор, поэтому:
+    curs.execute("PRAGMA foreign_keys = 1")
+except:
+    print("Ошибка подключения к БД!")
+
 #Объявим и присвоим тестовые значения
 #Тест
 g_sum_ent = 3
 g_operation = '+'
 g_comment = 'comment'
-g_category = 1
+g_category = "Случайная"
 
-try:
-    conn = sqlite3.connect(r'C:\Users\Lenovo\PycharmProjects\budget_manager\DB\db.db')
-    curs = conn.cursor()
-    #В SQLite интересно реализованы ключи - если их не включишь вручную, в таблицу может полететь мусор, поэтому:
-    curs.execute("PRAGMA foreign_keys = 1")
-except:
-    print("Ошибка подключения к БД!")
+#Пролублировано в функции подключение к БД
+
+def connect_to_db():
+    try:
+        conn = sqlite3.connect(r'C:\Users\Lenovo\PycharmProjects\budget_manager\DB\db.db')
+        curs = conn.cursor()
+        #В SQLite интересно реализованы ключи - если их не включишь вручную, в таблицу может полететь мусор, поэтому:
+        curs.execute("PRAGMA foreign_keys = 1")
+    except:
+        print("Ошибка подключения к БД!")
+connect_to_db()
 
 #Достанем существующие категории
-def dict_factory(cursor, row):
-    d = {}
-    for idx, col in enumerate(cursor.description):
-        d[col[0]] = row[idx]
-    return d
+def extract_categories():
+    with conn:
+        curs.execute("select * from dict_category")
+        while True:
+            row = curs.fetchone()
+            if row == None:
+                break
+            dict_categories[row[0]]=row[1]
+        return dict_categories
 
-#Продолжить функционал извлечения из БД
+#res_cat = extract_categories()
+#print(res_cat)
 
-#Тут должен начинаться класс работы с файлом
-
-#Функция вставки в файл
+#Функция вставки в файл и БД
 def inserting_into_file (p_sum_ent, p_operation, p_category, p_comment):
     nowdate = time.strftime("%d/%m/%Y %H:%M:%S")
 
@@ -78,7 +93,7 @@ def inserting_into_file (p_sum_ent, p_operation, p_category, p_comment):
 
 
 #Вызов функции вставки в файл
-inserting_into_file(g_sum_ent, g_operation, g_category, g_comment)
+#inserting_into_file(g_sum_ent, g_operation, g_category, g_comment)
 
 #Функция чтения из файла
 def read_file ():
@@ -87,25 +102,23 @@ def read_file ():
         list_out.append(line)
 
 #Тут должен начинаться класс работы с категориями
+#Добавим категорию и вытянем еще раз все из БД
+#Добавить проверку на существование
 
 def create_category(p_category_name):
     try:
-        with open('categories.txt', 'r') as file:
-        #file_open.write(p_category_name+'\n')
-            list_func = file.readlines()
-            print(list_func)
-    #вставить проверку существования категории
-            assert p_category_name+'\n' not in list_func
-            file = open('categories.txt', 'a')
-            file.write(p_category_name + '\n')
-            return 'Категория добавлена'
-    except AssertionError:
-        return 'Категория существует'
-    finally:
-        file.close()
+        sql_text = '''insert into dict_category (nm_category)
+                      values (?)'''
+        curs.execute(sql_text, (p_category_name,))
+        conn.commit()
+        extract_categories()
+        return 'Success'
+    except:
+        return 'Error'
 
-#a = create_category(g_category)
-#print(a)
+a = create_category(g_category)
+print(a)
+print(dict_categories)
 '''
 res_transaction = curs.execute("select * from bm_transaction")
 res = res_transaction.fetchall()
