@@ -25,13 +25,6 @@ try:
 except:
     print("Ошибка подключения к БД!")
 
-#Объявим и присвоим тестовые значения
-#Тест
-g_sum_ent = 3
-g_operation = '+'
-g_comment = 'comment'
-g_category = "Случайная"
-
 #Пролублировано в функции подключение к БД
 
 def connect_to_db():
@@ -42,7 +35,7 @@ def connect_to_db():
         curs.execute("PRAGMA foreign_keys = 1")
     except:
         print("Ошибка подключения к БД!")
-connect_to_db()
+
 
 #Достанем существующие категории
 def extract_categories():
@@ -55,45 +48,50 @@ def extract_categories():
             dict_categories[row[0]]=row[1]
         return dict_categories
 
-#res_cat = extract_categories()
-#print(res_cat)
+# Объявим и присвоим тестовые значения
+
+g_sum_in = 3
+g_sum_out = 0
+g_comment = 'comment'
+g_category = "3"
 
 #Функция вставки в файл и БД
-def inserting_into_file (p_sum_ent, p_operation, p_category, p_comment):
-    nowdate = time.strftime("%d/%m/%Y %H:%M:%S")
-
-    list_func.append(p_sum_ent)
-    list_func.append(p_operation)
-    list_func.append(nowdate)
-    list_func.append(p_category)
-    list_func.append(p_comment)
-
-    file_open = open('archive.txt', 'a')
-    string_to_file = str(list_func)
-    file_open.write(string_to_file+'\n')
-    file_open.close()
-
-    try:
-        sql_text = '''insert into bm_transaction(sum_tr, type_oper, date_oper, id_category, comment)
-                values (?, ?, ?, ?, ?)'''
-        #curs.execute(pref + "('3', '+', '18/02/2018 14:26:31', 'comment', 'category')")
-        curs.execute(sql_text, (p_sum_ent, p_operation, nowdate, p_category, p_comment))
-        conn.commit()
-    except sqlite3.IntegrityError:
-        res = 'Ошибка! Такой категории не сущствует!'
-    except AssertionError:
-        res = 'Ошибка вставки в БД!'
-    else:
-        res = 'Транзакция добавлена!'
-    finally:
-        conn.rollback()
-        print(res)
+def inserting_into_file (p_sum_in, p_sum_out, p_comment, p_category):
+    #Выполним забор категорий
+    extract_categories()
+    if not p_category in dict_categories:
+        res = 'Категории не существует!'
         return res
+    else:
+        nowdate = time.strftime("%d/%m/%Y %H:%M:%S")
+        list_func.append(g_sum_in)
+        list_func.append(g_sum_out)
+        list_func.append(nowdate)
+        list_func.append(p_category)
+        list_func.append(p_comment)
 
+        file_open = open('archive.txt', 'a')
+        string_to_file = str(list_func)
+        file_open.write(string_to_file+'\n')
+        file_open.close()
 
+        try:
+            sql_text = '''insert into bm_transaction(sum_in, sum_out, date_oper, comment, id_category)
+                  values (?, ?, ?, ?, ?)'''
+            #curs.execute(pref + "('3', '+', '18/02/2018 14:26:31', 'comment', 'category')")
+            curs.execute(sql_text, (p_sum_in, p_sum_out, nowdate, p_comment, p_category))
 
-#Вызов функции вставки в файл
-#inserting_into_file(g_sum_ent, g_operation, g_category, g_comment)
+            conn.commit()
+        except sqlite3.IntegrityError:
+            res = 'Ошибка! Такой категории не сущствует!'
+        except AssertionError:
+            res = 'Ошибка вставки в БД!'
+        else:
+            res = 'Транзакция добавлена!'
+        finally:
+            conn.rollback()
+            print(res)
+            return res
 
 #Функция чтения из файла
 def read_file ():
@@ -116,11 +114,15 @@ def create_category(p_category_name):
     except:
         return 'Error'
 
-a = create_category(g_category)
+'''a = create_category(g_category)
 print(a)
-print(dict_categories)
+print(dict_categories)'''
 '''
 res_transaction = curs.execute("select * from bm_transaction")
 res = res_transaction.fetchall()
 print(res)
+
+#Вызов функции вставки в файл
+print (inserting_into_file(g_sum_in, g_sum_out, g_comment, g_category))
+
 '''
