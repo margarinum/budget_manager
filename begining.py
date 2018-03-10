@@ -36,6 +36,7 @@ def connect_to_db():
     except:
         print("Ошибка подключения к БД!")
 
+connect_to_db()
 
 #Достанем существующие категории
 def extract_categories():
@@ -47,6 +48,8 @@ def extract_categories():
                 break
             dict_categories[row[0]]=row[1]
         return dict_categories
+
+
 
 # Объявим и присвоим тестовые значения
 
@@ -90,7 +93,6 @@ def inserting_into_file (p_sum_in, p_sum_out, p_comment, p_category):
             res = 'Транзакция добавлена!'
         finally:
             conn.rollback()
-            print(res)
             return res
 
 #Функция чтения из файла
@@ -110,9 +112,15 @@ def create_category(p_category_name):
         curs.execute(sql_text, (p_category_name,))
         conn.commit()
         extract_categories()
-        return 'Success'
+        res = 'Success'
+    except sqlite3.IntegrityError:
+        res = 'Ошибка! Категория существует'
     except:
-        return 'Error'
+        res = 'Ошибка'
+    finally:
+        conn.rollback()
+        return res
+
 
 '''a = create_category(g_category)
 print(a)
