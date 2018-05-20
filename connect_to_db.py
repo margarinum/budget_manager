@@ -9,7 +9,7 @@ def connect_to_db_sqlite():
         curs = conn.cursor()
         #В SQLite интересно реализованы ключи - если их не включишь вручную, в таблицу может полететь мусор, поэтому:
         curs.execute("PRAGMA foreign_keys = 1")
-        return True
+        return conn
     except:
         return False
 
@@ -17,6 +17,8 @@ def connect_to_db_pgsql():
     try:
         conn = psycopg2.connect("dbname='test_db' user='test' host='192.168.1.6' password='test'")
         curs = conn.cursor()
-        return True
+        return conn
     except:
         return False
+
+print(connect_to_db_pgsql())

@@ -20,17 +20,19 @@ list_out = []
 dict_categories = {}
 
 #Соединение с БД SQLite и PostgreSQL находятся в connect_to_db.py
-conn = connect_to_db_sqlite()
+conn = connect_to_db_pgsql()
 
 if conn:
     print('Connected to Database!')
 else:
     print('Error connecting to database!')
 
+curs = conn.cursor()
+
 #Достанем существующие категории для SQLite
 def extract_categories():
     with conn:
-        curs.execute("select * from dict_category")
+        curs.execute("select * from test_schema.dict_category")
         while True:
             row = curs.fetchone()
             if row == None:
@@ -38,6 +40,7 @@ def extract_categories():
             dict_categories[row[0]]=row[1]
         return dict_categories
 
+extract_categories()
 # Объявим и присвоим тестовые значения
 
 g_sum_in = 3
