@@ -2,6 +2,8 @@
 
 import time
 import sqlite3
+from connect_to_db import connect_to_db_sqlite
+from connect_to_db import connect_to_db_pgsql
 
 # Данная программа представляет из себя жалкие попытки вспомнить питон
 """
@@ -17,26 +19,13 @@ list_func = []
 list_out = []
 dict_categories = {}
 
-try:
-    conn = sqlite3.connect(r'C:\Users\Lenovo\PycharmProjects\budget_manager\DB\db.db')
-    curs = conn.cursor()
-    # В SQLite интересно реализованы ключи - если их не включишь вручную, в таблицу может полететь мусор, поэтому:
-    curs.execute("PRAGMA foreign_keys = 1")
-except:
-    print("Ошибка подключения к БД!")
+#Соединение с БД SQLite и PostgreSQL находятся в connect_to_db.py
+is_connected = connect_to_db_pgsql()
 
-#Пролублировано в функции подключение к БД
-
-def connect_to_db():
-    try:
-        conn = sqlite3.connect(r'C:\Users\Lenovo\PycharmProjects\budget_manager\DB\db.db')
-        curs = conn.cursor()
-        #В SQLite интересно реализованы ключи - если их не включишь вручную, в таблицу может полететь мусор, поэтому:
-        curs.execute("PRAGMA foreign_keys = 1")
-    except:
-        print("Ошибка подключения к БД!")
-
-connect_to_db()
+if is_connected:
+    print('Connected to Database!')
+else:
+    print('Error connecting to database!')
 
 #Достанем существующие категории
 def extract_categories():
@@ -48,8 +37,6 @@ def extract_categories():
                 break
             dict_categories[row[0]]=row[1]
         return dict_categories
-
-
 
 # Объявим и присвоим тестовые значения
 
