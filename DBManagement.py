@@ -7,6 +7,7 @@ class DBManagement():
 
     SQLiteConnString = r'C:\Users\Lenovo\PycharmProjects\budget_manager\DB\db.db'
 
+
     def connectToSQLite(self, SQLiteConnString=SQLiteConnString):
         try:
             conn = sqlite3.connect(SQLiteConnString)
@@ -44,24 +45,3 @@ class DBManagement():
             return dict_categories
 
 
-    def insertingCategory(self, p_sum_in, p_sum_out, p_comment, p_category):
-        # Выполним забор категорий
-        conn = DBManagement.connectToSQLite(self)
-        curs = conn.cursor()
-        dict_categories = DBManagement.extractCategories(self)
-        try:
-            sql_text = '''insert into bm_transaction(sum_in, sum_out, date_oper, comment, id_category)
-                      values (?, ?, ?, ?, ?)'''
-            # curs.execute(pref + "('3', '+', '18/02/2018 14:26:31', 'comment', 'category')")
-            curs.execute(sql_text, (p_sum_in, p_sum_out, datetime.datetime.now(), p_comment, p_category))
-
-            conn.commit()
-        except sqlite3.IntegrityError:
-            res = 'Ошибка! Такой категории не сущствует!'
-        except AssertionError:
-            res = 'Ошибка вставки в БД!'
-        else:
-            res = 'Транзакция добавлена!'
-        finally:
-            conn.rollback()
-            return res

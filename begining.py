@@ -1,8 +1,7 @@
 # coding=utf-8
 
-import time
-import sqlite3
 from DBManagement import *
+from Transactions import *
 
 # Данная программа представляет из себя жалкие попытки вспомнить питон
 """
@@ -38,9 +37,9 @@ def read_file ():
 #Добавим категорию и вытянем еще раз все из БД
 #Добавить проверку на существование
 
-conn = DBManagement();
+conn = Transactions();
 
-print(conn.insertingCategory(g_sum_in, g_sum_out, g_comment, g_category))
+print(conn.insertingTransaction(g_sum_in, g_sum_out, g_comment, g_category))
 
 
 '''a = create_category(g_category)
@@ -55,3 +54,9 @@ print(res)
 print (inserting_into_file(g_sum_in, g_sum_out, g_comment, g_category))
 
 '''
+
+print(conn.deleteTransaction(21))
+
+
+
+
