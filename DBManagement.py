@@ -31,17 +31,6 @@ class DBManagement():
             print('Error connecting to database!');
             return False;
 
-    def extractCategories(self):
-        dict_categories = {}
-        conn = DBManagement.connectToSQLite(self)
-        with conn:
-            curs = conn.cursor()
-            curs.execute("select * from dict_category")
-            while True:
-                row = curs.fetchone()
-                if row == None:
-                    break
-                dict_categories[row[0]] = row[1]
-            return dict_categories
+
 
 

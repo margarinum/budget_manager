@@ -1,14 +1,15 @@
 from DBManagement import *
-import psycopg2
+from Categories import *
 import sqlite3
 import datetime
+
 
 class Transactions():
     def insertingTransaction(self, p_sum_in, p_sum_out, p_comment, p_category):
         # Выполним забор категорий
         conn = DBManagement.connectToSQLite(self)
         curs = conn.cursor()
-        dict_categories = DBManagement.extractCategories(self)
+        dict_categories = Categories.extractCategories(self)
         try:
             sql_text = '''insert into bm_transaction(sum_in, sum_out, date_oper, comment, id_category)
                       values (?, ?, ?, ?, ?)'''
@@ -27,7 +28,7 @@ class Transactions():
             return res
 
     def deleteTransaction(self, p_id_transaction):
-        # Выполним забор категорий
+
         conn = DBManagement.connectToSQLite(self)
         curs = conn.cursor()
         try:
