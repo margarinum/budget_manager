@@ -30,21 +30,20 @@ class Transactions():
         # Выполним забор категорий
         conn = DBManagement.connectToSQLite(self)
         curs = conn.cursor()
-
-        #try:
-        sql_text = '''select count(*) from bm_transaction where transaction_id = %s'''
-        curs.execute(sql_text % p_id_transaction)
-        rowCount = curs.fetchone()[0]
-        if (rowCount == 1):
+        try:
             sql_text = '''delete from bm_transaction where transaction_id = %s'''
-            curs.execute(sql_text % p_id_transaction)
-            conn.commit()
-        elif (rowCount == 0):
-            return "Транзакции не существует"
+            curs.execute(sql_text % p_id_transaction);
+            conn.commit();
+            if conn.total_changes == 0:
+                res = 'Ошибка! Транзакиция не удалена'
+            elif conn.total_changes == 1:
+                res = 'Транзакция удалена'
+            else:
+                res = 'Что-то пошло не так...';
+            conn.rollback();
+            conn.close();
+        except sqlite3.IntegrityError:
+            res = 'Невозможно удалить транзакцию'
+        finally:
 
-#            res = "Транзакция удалена!"
-#        except AssertionError:
-#            res = 'Ошибка вставки в БД!'
-#        finally:
-#            conn.rollback()
-
+            return res;
