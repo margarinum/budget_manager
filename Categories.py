@@ -22,10 +22,9 @@ class Categories():
         curs = conn.cursor();
         res = ''
 
-        sql_text = '''insert into dict_category(nm_category)
-                      values (?)'''
+        sql_text = r'''insert into dict_category(nm_category) values ('{}')'''.format(p_category_name)
             # curs.execute(pref + "('3', '+', '18/02/2018 14:26:31', 'comment', 'category')")
-        curs.execute(sql_text, p_category_name)
+        curs.execute(sql_text)
 
         conn.commit()
         res = 'Категория добавлена!'

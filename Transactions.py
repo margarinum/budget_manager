@@ -29,7 +29,7 @@ class Transactions():
 
     def deleteTransaction(self, p_id_transaction):
 
-        conn = DBManagement.connectToSQLite(self)
+        conn = DBManagement.connectToSQLite(DBManagement)
         curs = conn.cursor()
         try:
             sql_text = '''delete from bm_transaction where transaction_id = %s'''

@@ -54,7 +54,7 @@ print (inserting_into_file(g_sum_in, g_sum_out, g_comment, g_category))
 #print(transactions.insertingTransaction(g_sum_in, g_sum_out, g_comment, g_category))
 #print(transactions.deleteTransaction(24))
 categories = Categories();
-print(categories.insertingCategory("Категория"))
+print(categories.insertingCategory('Категория'))
 
 
 
