@@ -1,11 +1,16 @@
 import sqlite3
 import psycopg2
-import datetime
+import os
 
 
 class DBManagement():
 
-    SQLiteConnString = r'C:\Users\Lenovo\PycharmProjects\budget_manager\DB\db.db'
+
+    #SQLiteConnString = r'C:\Users\Lenovo\PycharmProjects\budget_manager\DB\db.db'
+    #Достанем нахождение БД
+    cwd = os.getcwd()
+    SQLiteConnString = (cwd + '\\' + 'DB'+'\\'+'db.db')
+
 
 
     def connectToSQLite(self, SQLiteConnString=SQLiteConnString):
