@@ -1,6 +1,4 @@
 # coding=utf-8
-
-from DBManagement import *
 from Transactions import *
 import os
 
@@ -18,24 +16,7 @@ import os
 g_sum_in = 3
 g_sum_out = 0
 g_comment = 'comment'
-g_category = "3"
 
-#Глобальные переменные
-list_func = []
-list_out = []
-dict_categories = {}
-
-#Функция вставки в файл и БД
-
-
-#Функция чтения из файла
-def read_file ():
-    file = open('archive.txt')
-    for line in file:
-        list_out.append(line)
-#Тут должен начинаться класс работы с категориями
-#Добавим категорию и вытянем еще раз все из БД
-#Добавить проверку на существование
 
 transactions = Transactions();
 
@@ -54,7 +35,9 @@ print (inserting_into_file(g_sum_in, g_sum_out, g_comment, g_category))
 #print(transactions.insertingTransaction(g_sum_in, g_sum_out, g_comment, g_category))
 #print(transactions.deleteTransaction(24))
 categories = Categories();
-print(categories.insertingCategory('Категория'))
+#print(categories.insertCategory("Какая-то категория еще"));
+print(transactions.insertingTransaction(g_sum_in, g_sum_out, g_comment, 3))
+print(categories.deleteCategory(3))
 
 
 
