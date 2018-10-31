@@ -1,6 +1,5 @@
 from DBManagement import *
 import sqlite3
-import datetime
 
 class Categories():
 
