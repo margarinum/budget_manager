@@ -1,9 +1,9 @@
 # coding=utf-8
-from Transactions import *
-import window
+from back.Transactions import *
+#import window
 import os
 from PyQt5 import QtWidgets
-import main
+import back.main
 
 # Данная программа представляет из себя жалкие попытки вспомнить питон
 """
@@ -42,7 +42,6 @@ print (inserting_into_file(g_sum_in, g_sum_out, g_comment, g_category))
 #print(transactions.insertingTransaction(g_sum_in, g_sum_out, g_comment, 3))
 #print(categories.deleteCategory(3))
 
-main.main()
 
 
 

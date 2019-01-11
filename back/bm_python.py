@@ -2,8 +2,8 @@
 
 import time
 import sqlite3
-from connect_to_db import connect_to_db_sqlite
-from connect_to_db import connect_to_db_pgsql
+from back.connect_to_db import connect_to_db_sqlite
+from back.connect_to_db import connect_to_db_pgsql
 
 # Данная программа представляет из себя жалкие попытки вспомнить питон
 """

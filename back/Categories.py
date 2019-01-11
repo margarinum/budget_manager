@@ -1,4 +1,4 @@
-from DBManagement import *
+from back.DBManagement import *
 import sqlite3
 
 class Categories():

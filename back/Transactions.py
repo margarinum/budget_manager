@@ -1,5 +1,5 @@
-from DBManagement import *
-from Categories import *
+from back.DBManagement import *
+from back.Categories import *
 import sqlite3
 import datetime
 

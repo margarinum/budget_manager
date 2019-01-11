@@ -6,16 +6,52 @@
 
 #mainDiv{
 
-    position	: absolute;
-    top		    : 0;
+}
+
+#buttonAddTransaction{
+
+    position: absolute;
+    top		    : -81%;
     bottom		: 0;
-    left		: 0;
+    left		: -83%;
     right		: 0;
     margin		: auto;
-    height		: 240px;
-    width		: 25%;
+    height		: 150px;
+    width		: 15%;
 
+    background-color: #4CAF50; /* Green */
+    border: 2px;
+    border-radius: 3%;
+    color: white;
+    padding: 15px 32px;
     text-align: center;
-    vertical-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+
+
+}
+
+#buttonListTransaction{
+
+    position: absolute;
+    top		    : -81%;
+    bottom		: 0;
+    left		: -51%;
+    right		: 0;
+    margin		: auto;
+    height		: 150px;
+    width		: 15%;
+
+    background-color: #4CAF50; /* Green */
+    border: 2px;
+    border-radius: 3%;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+
 
 }
